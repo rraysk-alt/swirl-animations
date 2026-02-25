@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Swirl Animation</title>
+    <title>Terry Wak Byeklo - Pro</title>
     <style>
         body {
             margin: 0;
@@ -11,24 +11,30 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background-color: #0f0f0f;
+            background: radial-gradient(circle, #1a1a2e 0%, #020205 100%);
             overflow: hidden;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', sans-serif;
         }
 
         #container {
             position: relative;
             display: flex;
-            gap: 10px;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: nowrap; /* Keeps letters in one line */
         }
 
         .letter {
             display: inline-block;
-            font-size: 4rem;
-            font-weight: bold;
-            color: #00ffcc;
-            text-shadow: 0 0 10px rgba(0, 255, 204, 0.5);
-            transition: all 2s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            font-size: 3rem; /* Smaller base size for mobile */
+            font-weight: 900;
+            /* Gradient Text Effect */
+            background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            /* Neon Glow */
+            filter: drop-shadow(0 0 8px rgba(79, 172, 254, 0.8));
+            transition: all 3s cubic-bezier(0.4, 0, 0.2, 1); /* Slower, smoother movement */
             position: relative;
         }
 
@@ -38,8 +44,8 @@
             transform: 
                 translate(var(--x), var(--y)) 
                 rotate(var(--r)) 
-                scale(0.5);
-            filter: blur(10px);
+                scale(0);
+            filter: blur(20px);
         }
 
         /* The "Formed" State */
@@ -47,6 +53,16 @@
             opacity: 1;
             transform: translate(0, 0) rotate(0deg) scale(1);
             filter: blur(0px);
+        }
+
+        /* Mobile Optimization */
+        @media (max-width: 600px) {
+            .letter {
+                font-size: 1.8rem; /* Shrinks text for small screens */
+            }
+            #container {
+                gap: 2px;
+            }
         }
     </style>
 </head>
@@ -58,16 +74,18 @@
         const text = "Terry Wak byeklo";
         const container = document.getElementById('container');
 
-        // Initialize letters
-        text.split('').forEach((char) => {
+        text.split('').forEach((char, index) => {
             const span = document.createElement('span');
-            span.textContent = char === ' ' ? '\u00A0' : char; // Handle spaces
+            span.textContent = char === ' ' ? '\u00A0' : char;
             span.className = 'letter scattered';
             
-            // Assign random scatter values
-            span.style.setProperty('--x', `${(Math.random() - 0.5) * 1000}px`);
-            span.style.setProperty('--y', `${(Math.random() - 0.5) * 1000}px`);
-            span.style.setProperty('--r', `${(Math.random() - 0.5) * 1080}deg`);
+            // Randomized chaos coordinates
+            span.style.setProperty('--x', `${(Math.random() - 0.5) * 800}px`);
+            span.style.setProperty('--y', `${(Math.random() - 0.5) * 800}px`);
+            span.style.setProperty('--r', `${(Math.random() - 0.5) * 720}deg`);
+            
+            // Staggered timing for a "wave" effect
+            span.style.transitionDelay = `${index * 0.05}s`;
             
             container.appendChild(span);
         });
@@ -75,7 +93,7 @@
         const letters = document.querySelectorAll('.letter');
 
         function animate() {
-            // Step 1: Form the words
+            // Form words
             setTimeout(() => {
                 letters.forEach(el => {
                     el.classList.remove('scattered');
@@ -83,18 +101,17 @@
                 });
             }, 500);
 
-            // Step 2: Dissolve back
+            // Dissolve back
             setTimeout(() => {
                 letters.forEach(el => {
                     el.classList.remove('formed');
                     el.classList.add('scattered');
                 });
-            }, 4000); // Stay formed for ~3.5 seconds
+            }, 5000); // Wait longer (5s) while formed
         }
 
-        // Run the loop
         animate();
-        setInterval(animate, 6500); // Repeat every 6.5 seconds
+        setInterval(animate, 9000); // Long loop for slower feel
     </script>
 </body>
 </html>
